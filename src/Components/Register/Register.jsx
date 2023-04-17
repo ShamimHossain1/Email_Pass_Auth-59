@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
+import { createUserWithEmailAndPassword, getAuth, sendEmailVerification } from "firebase/auth";
 import app from '../Firebase/Firebase';
 import { Link } from 'react-router-dom';
 
@@ -49,12 +49,20 @@ const Register = () => {
             setError('')
             event.target.reset()
             setSuccess('Register SuccessFull')
+            sendVerification(loggedUser)
         })
         .catch(error =>{
             // console.log(error.message);
             setError(error.message)
         })
 
+    }
+
+    const sendVerification=(email)=>{
+        sendEmailVerification(email)
+        .then(result=>{
+            alert('please verify your email')
+        })
     }
     return (
         <div className='text-center'>
@@ -65,6 +73,7 @@ const Register = () => {
                 <p className='text-red-600'>{error}</p><br />
 
                 <input type="submit" value="Register" className='border p-2 rounded-lg ' />
+                
                 <p>Already Have an account? Please <Link className='text-blue-600 underline font-semibold' to='/login'>Login</Link></p>
                 <p className='text-green-500 font-semibold'>{success}</p>
             </form>
