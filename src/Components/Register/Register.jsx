@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { createUserWithEmailAndPassword, getAuth, sendEmailVerification } from "firebase/auth";
+import { createUserWithEmailAndPassword, getAuth, sendEmailVerification, updateProfile } from "firebase/auth";
 import app from '../Firebase/Firebase';
 import { Link } from 'react-router-dom';
 
@@ -26,6 +26,7 @@ const Register = () => {
         setError('');
         const email = (event.target.email.value)
         const password = (event.target.password.value)
+        const name = (event.target.name.value)
 
         // validate
 
@@ -50,6 +51,7 @@ const Register = () => {
             event.target.reset()
             setSuccess('Register SuccessFull')
             sendVerification(loggedUser)
+            updateUserdata(loggedUser, name)
         })
         .catch(error =>{
             // console.log(error.message);
@@ -61,13 +63,30 @@ const Register = () => {
     const sendVerification=(email)=>{
         sendEmailVerification(email)
         .then(result=>{
-            alert('please verify your email')
+            alert('please check your mailbox to verify your email')
         })
     }
+
+    const updateUserdata = (user, name)=>{
+        updateProfile(user,{
+            displayName:name
+        })
+        .then(()=>{
+            console.log('username updated')
+        })
+        .catch(error =>{
+            // console.log(error.message);
+            setError(error.message)
+        })
+
+    }
+
     return (
         <div className='text-center'>
             <h2  className='font-semibold text-xl mb-4' >Please Register</h2>
             <form onSubmit={handleSubmit} className='mt-5 border py-5 w-1/4 mx-auto rounded-lg'>
+
+                <input type="text" placeholder='Your Name' name='name' id='name' className='rounded-lg' required /><br /><br />
                 <input onChange={handleEmailChange} type="email" placeholder='Your Email' name='email' id='email' className='rounded-lg' required /><br /><br />
                 <input onBlur={HandlePasswordBlur} type="password" name='password' id='password' placeholder='Your Password' className='rounded-lg' required /><br />
                 <p className='text-red-600'>{error}</p><br />
