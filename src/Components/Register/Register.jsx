@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
+import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
+import app from '../Firebase/Firebase';
 
+const auth = getAuth(app);
 
 const Register = () => {
     const [email, setEmail] = useState('');
@@ -19,7 +22,15 @@ const Register = () => {
         const email = (event.target.email.value)
         const password = (event.target.password.value)
 
-      
+        createUserWithEmailAndPassword(auth, email, password)
+        .then (result=>{
+            const loggedUser = result.user;
+            console.log(loggedUser);
+        })
+        .catch(error =>{
+            console.log(error);
+        })
+
     }
     return (
         <div className='text-center'>
