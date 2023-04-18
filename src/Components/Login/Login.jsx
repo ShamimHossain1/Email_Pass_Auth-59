@@ -7,6 +7,8 @@ const auth = getAuth(app);
 const Login = () => {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    const [showPass, setShowPass] = useState('password');
+    const [open, setOpen] = useState(false);
     const emailRef = useRef();
 
     const handleLogin = event => {
@@ -51,25 +53,41 @@ const Login = () => {
 
     }
 
-    const resetPassword =(event)=>{
+    const resetPassword = (event) => {
 
         const email = emailRef.current.value;
-        if(!email){
+        if (!email) {
             alert('Provide valid email address to rest')
             return;
         }
         sendPasswordResetEmail(auth, email)
-        .then(()=>{
-            alert('please check your email inbox')
-        })
-        .catch(error => {
-            setError(error.message)
-        })
+            .then(() => {
+                alert('please check your email inbox')
+            })
+            .catch(error => {
+                setError(error.message)
+            })
 
 
 
 
     }
+
+
+
+const show= (event)=>{
+    event.preventDefault();
+    setOpen(!open)
+    // console.log(open)
+
+    if (open) {
+        setShowPass('text');
+    }
+    else{
+        setShowPass('password')
+    }
+
+}
 
     return (
         <div className='text-center border p-5 w-1/2 mx-auto'>
@@ -77,11 +95,11 @@ const Login = () => {
             <form onSubmit={handleLogin} className="mx-auto max-w-md">
                 <div className="mb-4">
                     <label htmlFor="email" className="block text-gray-700 font-bold mb-2">Email Address</label>
-                    <input type="email" id="email" ref={emailRef} name="email" className="w-full px-4 py-3 rounded-lg shadow-sm focus:outline-none focus:shadow-outline-gray" placeholder="Enter your email address" required />
+                    <input type="email" id="email" ref={emailRef} name="email" className="w-10/12 px-4 py-3 rounded-lg shadow-sm focus:outline-none focus:shadow-outline-gray" placeholder="Enter your email address" required />
                 </div>
                 <div className="mb-6">
                     <label htmlFor="password" className="block text-gray-700 font-bold mb-2">Password</label>
-                    <input type="password" id="password" name="password" className="w-full px-4 py-3 rounded-lg shadow-sm focus:outline-none focus:shadow-outline-gray" placeholder="Enter your password" required />
+                    <input type={showPass} id="password" name="password" className=" w-10/12 px-4 py-3 rounded-lg shadow-sm focus:outline-none focus:shadow-outline-gray" placeholder="Enter your password" required /> <button onClick={show} className='border relative -ml-12 rounded-lg '>{open ? 'show':'hide' }</button>
                 </div>
                 <div className="flex items-center justify-between">
                     <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline-blue">Sign In</button>
